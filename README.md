@@ -6,7 +6,7 @@ Ilios users, administrators, and developers should feel free to download and bui
 
 1. Reporting
 2. Enrollments
-3. Object creation/update/deletion (Programs, Courses, Sessions, Offerings, Users, Larning Materials, etc.)
+3. Object creation/update/deletion (Programs, Courses, Sessions, Offerings, Users, Learning Materials, etc.)
 
 At the current time, all custom and contributed apps are stored at the top level of this repository, regardless of functionality or programming language, and are named in a way that attempts to make their purpose fairly obvious. The programming language in which they're written is indicated by the extension of the filename itself (eg,'.php','.py',etc.), and their use should be fairly well-documented within the comments of the code.
 
