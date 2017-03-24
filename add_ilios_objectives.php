@@ -19,7 +19,7 @@ const API_PATH = '/api/v1';
 
 // CSV_FILE: If you would like to parse a CSV/spreadsheet file for your data, set the path to the file on the system where you will be
 // executing this script if you'd rather use an array of manual-entered data, set this to value to 'false' (without the quotes!)
-const CSV_FILE = '/homedir/objectives.csv';
+const CSV_FILE = 'data/objectives.csv';
 
 // If we are planning to add objectives, we'll need to set append the 'objectives' endpoint to the url.  To learn which endpoints are 
 //available, append '/api/doc' to your API_HOST url or look at https://ilios3-demo.ucsf.edu/api/doc for reference.
@@ -27,16 +27,17 @@ const CSV_FILE = '/homedir/objectives.csv';
 $objectiveAPIEndpoint = API_HOST . API_PATH . '/objectives';
 
 // If we chose to use a CSV file for our data (recommended!) and set the path to the file above, let's parse its data into an array
-if (false !== CSV_FILE){
+if (false === CSV_FILE){
     
 } else {    
     //otherwise, let's create the arrays manually
     $programYearId = 1;
-    $competencyId = 19;
+    $competencyId = 115;
+    $sessionId = 32980;
 
     $objectives = [
-        [ 'title' => 'Foo Bar', 'programYears' => [ $programYearId ], 'competency' =>  $competencyId],
-        [ 'title' => 'Lorem Ipsum', 'programYears' => [ $programYearId ], 'competency' =>  $competencyId]
+        [ 'title' => 'Foo Bar', 'competency' =>  $competencyId, 'sessions' => [ $sessionId  ] ],
+        //[ 'title' => 'Lorem Ipsum', 'programYears' => [ $programYearId ], 'competency' =>  $competencyId]
     ];
 }
 
@@ -49,15 +50,20 @@ $ch = curl_init($objectiveAPIEndpoint);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 // 2. Because we'll want to parse the returned JSON data as an actual string of text, we set the RETURNTRANSFER option to true
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 3. We also want to make sure to track the headers sent in case of error(s)
+curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
 // Whether we chose to use a CSV file for our data or we created it by hand, all of our data is now in the '$objectives' array.
 // So let's parse each item in the $objectives array one at a time via a 'foreach' loop, and add its fields/values to the curl 
 // handler for POSTing to the API via the curl handler ($ch)
 foreach ($objectives as $objective) {
+
+    //objectives need to be sent wrapped in an array named 'objectives', so let's wrap it here
+    $objectives_payload = array('objectives' => array($objective));
     // Because the Ilios API works with programming language-agnostic 'JSON' data format, we first need to convert 
     // each record's fields/values into a JSON object. We do that here, putting the record's fieldnames/values into
     // a variable called '$json' using the json_encode() PHP function
-    $json = json_encode($objective);
+    $json = json_encode($objectives_payload);
     // Now that the data for this single record is in JSON format and we need to send the values to the API via the 'POST' method,
     // let's set the fieldnames of the '$json' data as 'POST' fields in our curl session handler: 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
@@ -69,14 +75,18 @@ foreach ($objectives as $objective) {
         'Content-Length: ' . strlen($json),
         // this is the security token that we created earlier that will determine our permissions and whether or not we're allowed to
         // do what we are trying to do!
-        'X-JWT-Authorization:Token ' . API_TOKEN,
+        'X-JWT-Authorization: Token ' . API_TOKEN,
     ]);
+
     // this is the actual action that takes all the data and options we just set above and curls it to the API. It stores the result
-    // in a variable called '$result', which will contain the response from the API server and whether or it was successful or not
+    // in a variable called '$result', which will contain the response from the API server and whether or it was a successful request
     $result = curl_exec($ch);
 
-    // if there is no result, there was a problem...
-    if (false === $result){
+    //get the http status code of the response to check for errors or success
+    $result_http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    // expect a 201 status upon success, else get info about the attempt
+    if (201 !== $result_http_status){
         // so let's use the curl_getinfo() PHP function to check our curl session handler for the response and set it in a variable
         // named '$info'
         $info = curl_getinfo($ch);
