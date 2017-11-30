@@ -15,7 +15,8 @@
 // API_TOKEN: If you don't already have one, you'll need a JSON Web Token (JWT) to authenticate!
 // To learn how to create/test a token, please visit
 // https://github.com/ilios/ilios/blob/master/docs/ilios_api.md#creating-a-json-web-token-jwt
-const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
+//const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
+const API_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJpbGlvcyIsImF1ZCI6ImlsaW9zIiwiaWF0IjoiMTUxMTk4OTg5NiIsImV4cCI6IjE1MTMyMzgzOTkiLCJ1c2VyX2lkIjoxNn0.T_WnHNrxdiBf1xrW1YXc9MTXYfsHGHr85uE8jcdTl6M'; // put your JWT token here.
 
 // API_HOST: This is the base url of the Ilios instance you are on, just enter it as you normally would in a browser
 const API_HOST = 'https://ilios3-demo.ucsf.edu';
@@ -27,6 +28,7 @@ const API_PATH = '/api/v1';
 // executing this script.
 // If you'd rather use an array of manually-entered data, set this to value to false
 const DATA_FILE = 'data/objectives.csv';
+const DATA_FILE_HAS_HEADER_ROW = true;
 
 // Because we are planning to add objectives, we'll need to append the `/objectives` endpoint to the url. To learn
 // which endpoints are available to use with Ilios, simply append '/api/doc' to your own API_HOST url or take a look at
@@ -40,8 +42,29 @@ $objectiveAPIEndpoint = API_HOST . API_PATH . '/objectives';
 // where we parse its data into an array
 if (false !== DATA_FILE && is_file(DATA_FILE)){
 
+    // First, we create the $objectives array
+    $objectives = [];
 
-    
+    // Then, we parse the entire csv file into an array
+    $csv = array_map('str_getcsv', file(DATA_FILE));
+
+    // Because the header row of our CSV DATAFILE contains the entity-type attribute names, let's put those in their
+    // own $column_headers array and shift the pointer to the next row of the array (the first row with data)
+    if(DATA_FILE_HAS_HEADER_ROW) $column_headers = array_shift($csv);
+
+    // Now moving through each remaining row of the CSV data, let's process the data and populate the $objectives array
+    // with only the necessary data (Titles and entity ID's):
+    foreach($csv as $value){
+        // If there are multiple entity ID values in the 3rd column of the CSV data, they should each be separated by
+        // semicolons, so we split them into their own array
+        $entity_id_array = explode(';',$value[2]);
+
+        // Now we populate the $objectives, using the value second column of the original CSV to determine th API
+        // attribute name that will be used and the type of entity to which objective will be added (eg, 'courses',
+        // 'sessions', or 'programYears')
+        $objectives[] = [ $column_headers[0] => $value[0], $value[1] => $entity_id_array ];
+    }
+
 } else {    
     //otherwise, for small changes/amounts of data, you can create the arrays manually instead of using a data file...
     $programYearId = 73; // "Doctor of Medicine 2015-2016" on the Ilios Demo Site
@@ -76,7 +99,7 @@ foreach ($objectives as $objective) {
     // As shown at https://ilios3-demo.ucsf.edu/api/doc#section-Objective
     // objectives need to be sent within an object named 'objective', so let's set up the payload as an array, set the
     // first associative index name as 'objective' and then add the $objective array to that index:
-    $objectives_payload = array('objective' => $objective);
+    $objectives_payload = ['objective' => $objective];
     // Because the Ilios API works with programming language-agnostic 'JSON' data format, before submitting the data, we
     // first need to convert the $objectives_payload into a JSON object. We use json_encode() PHP function for this:
     $json = json_encode($objectives_payload);
