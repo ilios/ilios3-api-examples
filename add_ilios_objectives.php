@@ -15,8 +15,7 @@
 // API_TOKEN: If you don't already have one, you'll need a JSON Web Token (JWT) to authenticate!
 // To learn how to create/test a token, please visit
 // https://github.com/ilios/ilios/blob/master/docs/ilios_api.md#creating-a-json-web-token-jwt
-//const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
-const API_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJpbGlvcyIsImF1ZCI6ImlsaW9zIiwiaWF0IjoiMTUxMTk4OTg5NiIsImV4cCI6IjE1MTMyMzgzOTkiLCJ1c2VyX2lkIjoxNn0.T_WnHNrxdiBf1xrW1YXc9MTXYfsHGHr85uE8jcdTl6M'; // put your JWT token here.
+const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
 
 // API_HOST: This is the base url of the Ilios instance you are on, just enter it as you normally would in a browser
 const API_HOST = 'https://ilios3-demo.ucsf.edu';
