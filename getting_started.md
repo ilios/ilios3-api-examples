@@ -20,4 +20,6 @@ Writing a separate application for accessing/adding/updating the data you need w
 8. Combine and operate upon the data returned from each API call, and make other calls as needed.
 9. Output the data as desired!
 
-### And that's it! Following these steps basic steps should get you on your way!
+#### And that's it! 
+
+### Following these basic steps should get you on your way!
