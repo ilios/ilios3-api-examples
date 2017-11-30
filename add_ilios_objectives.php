@@ -23,11 +23,11 @@ const API_HOST = 'https://ilios3-demo.ucsf.edu';
 // ever need to be changed, but we can never know for sure, so we set it as a variable here:
 const API_PATH = '/api/v1';
 
-// DATA_FILE: If you would like to parse a file for your data, set the path to the file on the system where you will be
+// DATAFILE: If you would like to parse a file for your data, set the path to the file on the system where you will be
 // executing this script.
 // If you'd rather use an array of manually-entered data, set this to value to false
-const DATA_FILE = 'data/objectives.csv';
-const DATA_FILE_HAS_HEADER_ROW = true;
+const DATAFILE = 'data/objectives.csv';
+const DATAFILE_HAS_HEADER_ROW = true;
 
 // Because we are planning to add objectives, we'll need to append the `/objectives` endpoint to the url. To learn
 // which endpoints are available to use with Ilios, simply append '/api/doc' to your own API_HOST url or take a look at
@@ -39,17 +39,17 @@ $objectiveAPIEndpoint = API_HOST . API_PATH . '/objectives';
 
 // If we are using a CSV file for the data (recommended!) and have properly set the path to the file above, here is
 // where we parse its data into an array
-if (false !== DATA_FILE && is_file(DATA_FILE)){
+if (false !== DATAFILE && is_file(DATAFILE)){
 
     // First, we create the $objectives array
     $objectives = [];
 
     // Then, we parse the entire csv file into an array
-    $csv = array_map('str_getcsv', file(DATA_FILE));
+    $csv = array_map('str_getcsv', file(DATAFILE));
 
     // Because the header row of our CSV DATAFILE contains the entity-type attribute names, let's put those in their
     // own $column_headers array and shift the pointer to the next row of the array (the first row with data)
-    if(DATA_FILE_HAS_HEADER_ROW) $column_headers = array_shift($csv);
+    if(DATAFILE_HAS_HEADER_ROW) $column_headers = array_shift($csv);
 
     // Now moving through each remaining row of the CSV data, let's process the data and populate the $objectives array
     // with only the necessary data (Titles and entity ID's):
