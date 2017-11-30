@@ -87,21 +87,21 @@ curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 // 2. Because we'll want to parse the returned JSON data as an actual string of text, we set the RETURNTRANSFER option
 // to true:
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-// 3. We want to make sure to track the headers sent in case of error(s), so set the CURINFO_HEADER_OUT value to true:
+// 3. We want to make sure to track the headers sent in case of error(s), so set the CURLINFO_HEADER_OUT value to true:
 curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
 // Whether we chose to use a CSV file for our data or created it manually, all of our data is now in the $objectives
 // array. So let's parse each item in the $objectives array one at a time via a 'foreach' loop, and add the fields
-// and values to the curl handler ($ch) for POSTing to the API during each iteration of the loop:
+// and values to the curl handler ($ch) for POSTing JSON data to the API during each iteration of the loop:
 foreach ($objectives as $objective) {
 
     // As shown at https://ilios3-demo.ucsf.edu/api/doc#section-Objective
-    // objectives need to be sent within an object named 'objective', so let's set up the payload as an array, set the
-    // first associative index name as 'objective' and then add the $objective array to that index:
-    $objectives_payload = ['objective' => $objective];
+    // objectives need to be sent within an object named 'objective', so let's set up the payload initially as an array,
+    // set its first associative index attribute as 'objective', and then put the $objective array at that index:
+    $request_payload = ['objective' => $objective];
     // Because the Ilios API works with programming language-agnostic 'JSON' data format, before submitting the data, we
-    // first need to convert the $objectives_payload into a JSON object. We use json_encode() PHP function for this:
-    $json = json_encode($objectives_payload);
+    // first need to convert the $request_payload into a JSON object. We use json_encode() PHP function for this:
+    $json = json_encode($request_payload);
     // Now that the data for this single record is in JSON format and we need to send the values to the API via the
     // 'POST' method, let's set the fields of the '$json' data as 'POST' fields in our curl session handler:
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
