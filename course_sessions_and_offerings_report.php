@@ -14,8 +14,7 @@
 // API_TOKEN: If you don't already have one, you'll need a JSON Web Token (JWT) to authenticate!
 // To learn how to create/test a token, please visit
 // https://github.com/ilios/ilios/blob/master/docs/ilios_api.md#creating-a-json-web-token-jwt
-//const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
-const API_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJpbGlvcyIsImF1ZCI6ImlsaW9zIiwiaWF0IjoiMTUxMjA2MTg4OCIsImV4cCI6IjE1MTMzMjQ3OTUiLCJ1c2VyX2lkIjoxNn0.bXwTB19WMiLYJdWNzkFeHxNjjUyxBBsUc-nSCrca-BM'; // put your JWT token here.
+const API_TOKEN = 'YOUR TOKEN GOES HERE'; // put your JWT token here.
 
 // API_HOST: This is the base url of the Ilios instance you are on, just enter it as you normally would in a browser
 const API_HOST = 'https://ilios3-demo.ucsf.edu';
@@ -125,7 +124,7 @@ foreach($session_data_array['sessions'] as $session) {
      $report_array[] = [
          'course_id' => $course_data_array['courses'][0]['id'],
          'course_title' => $course_data_array['courses'][0]['title'],
-         
+
          'session_id' => $session[id],
          'session_title' => $session[title]
      ];
